@@ -1,0 +1,570 @@
+<!DOCTYPE html>
+<html lang="zh-CN" class="dark">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>中二节奏 档案工具</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            fontFamily: {
+              sans: [
+                "Inter",
+                "ui-sans-serif",
+                "system-ui",
+                "-apple-system",
+                "BlinkMacSystemFont",
+                '"Segoe UI"',
+                "Roboto",
+                '"Helvetica Neue"',
+                "Arial",
+                '"Noto Sans"',
+                "sans-serif",
+                '"Apple Color Emoji"',
+                '"Segoe UI Emoji"',
+                '"Segoe UI Symbol"',
+                '"Noto Color Emoji"',
+              ],
+            },
+          },
+        },
+      };
+    </script>
+    <script>
+      (function () {
+        const _warn = console.warn.bind(console);
+        console.warn = function (...args) {
+          try {
+            if (
+              args &&
+              args[0] &&
+              String(args[0]).includes(
+                "cdn.tailwindcss.com should not be used in production"
+              )
+            ) {
+              return;
+            }
+          } catch (e) {}
+          _warn(...args);
+        };
+      })();
+    </script>
+    <style type="text/tailwindcss">
+      /* 基础样式 */
+      body {
+        @apply bg-gray-900 text-gray-100 font-sans antialiased;
+      }
+
+      /* 页面容器 */
+      #app {
+        @apply flex flex-col min-h-screen;
+      }
+
+      /* 头部导航 */
+      header {
+        @apply bg-gray-800/50 backdrop-blur-sm shadow-lg sticky top-0 z-50;
+      }
+
+      /* 卡片样式 */
+      .tool-card {
+        @apply bg-gray-800 rounded-xl shadow-2xl overflow-hidden transition-all duration-300 hover:shadow-indigo-500/30;
+      }
+
+      .tool-card-content {
+        @apply p-6 md:p-8;
+      }
+
+      /* 按钮样式 */
+      .btn {
+        @apply inline-block bg-indigo-600 text-white font-bold py-3 px-6 rounded-lg shadow-lg transition-all duration-300 transform hover:bg-indigo-700 hover:-translate-y-1 focus:outline-none focus:ring-4 focus:ring-indigo-500/50 disabled:opacity-50 disabled:cursor-not-allowed;
+      }
+
+      .btn-secondary {
+        @apply bg-gray-700 text-gray-200 hover:bg-gray-600 focus:ring-gray-500/50;
+      }
+
+      /* 文件上传框样式 */
+      .file-input-wrapper {
+        @apply border-2 border-dashed border-gray-600 rounded-lg p-6 text-center cursor-pointer transition-all duration-300 hover:border-indigo-500 hover:bg-gray-800/50;
+      }
+
+      .file-input-wrapper.dragover {
+        @apply border-indigo-500 bg-gray-800/50 scale-105;
+      }
+
+      .file-input-label {
+        @apply text-gray-400;
+      }
+
+      .file-name {
+        @apply text-indigo-400 font-medium mt-2;
+      }
+
+      /* 隐藏的页面内容 */
+      .page-content {
+        display: none;
+      }
+
+      /* 导航激活样式 */
+      .nav-link.active {
+        @apply text-indigo-400 font-semibold;
+      }
+
+      /* 提示框 */
+      .alert {
+        @apply p-4 rounded-lg mb-6;
+      }
+      .alert-error {
+        @apply bg-red-900/50 text-red-200 border border-red-800;
+      }
+      .alert-success {
+        @apply bg-green-900/50 text-green-200 border border-green-800;
+      }
+
+      /* 成绩编辑表单样式 */
+      .score-input {
+        @apply w-full px-4 py-2 bg-gray-700 border border-gray-600 rounded-lg text-white focus:outline-none focus:border-indigo-500;
+      }
+
+      .form-checkbox {
+        @apply rounded border-gray-600 text-indigo-600 focus:ring-indigo-500 focus:ring-opacity-25 bg-gray-700;
+      }
+    </style>
+  </head>
+  <body class="bg-gray-900">
+    <div id="app">
+      <header>
+        <nav
+          class="container mx-auto max-w-5xl px-6 py-4 flex justify-between items-center"
+        >
+          <a href="#" class="text-2xl font-bold text-white">
+            <span class="text-indigo-400">Chuni</span>ArchTools
+          </a>
+          <ul class="flex space-x-6 text-gray-300">
+            <li>
+              <a
+                href="#home"
+                class="nav-link hover:text-indigo-400 transition-colors"
+                >主页</a
+              >
+            </li>
+            <li>
+              <a
+                href="#rin-to-lx"
+                class="nav-link hover:text-indigo-400 transition-colors"
+                >RinNet -> LxNet</a
+              >
+            </li>
+            <li>
+              <a
+                href="#merge-csv"
+                class="nav-link hover:text-indigo-400 transition-colors"
+                >CSV 合并</a
+              >
+            </li>
+            <li>
+              <a
+                href="#edit-score"
+                class="nav-link hover:text-indigo-400 transition-colors"
+                >修改成绩</a
+              >
+            </li>
+          </ul>
+        </nav>
+      </header>
+      <main
+        id="page-content"
+        class="flex-grow container mx-auto max-w-5xl p-6 md:p-10"
+      >
+        <div id="page-home" class="page-content space-y-10">
+          <div class="text-center pt-10">
+            <h1 class="text-5xl font-extrabold text-white mb-4">
+              中二节奏 档案转换器
+            </h1>
+            <p class="text-xl text-gray-400">纯前端工具，安全、快速、便捷。</p>
+          </div>
+          <div class="grid md:grid-cols-3 gap-8">
+            <a href="#rin-to-lx" class="tool-card block hover:scale-105">
+              <div class="tool-card-content">
+                <h2 class="text-2xl font-bold text-indigo-400 mb-3">
+                  RinNet JSON -> LxNet CSV
+                </h2>
+                <p class="text-gray-300">
+                  将 RinNet 导出的 `userPlaylogList` JSON 档案转换为 LxNet
+                  兼容的 CSV 格式。
+                </p>
+              </div>
+            </a>
+            <a href="#merge-csv" class="tool-card block hover:scale-105">
+              <div class="tool-card-content">
+                <h2 class="text-2xl font-bold text-indigo-400 mb-3">
+                  CSV 合并
+                </h2>
+                <p class="text-gray-300">
+                  将两个具有相同表头的 CSV 文件合并为一个，例如合并新旧数据。
+                </p>
+              </div>
+            </a>
+            <a href="#edit-score" class="tool-card block hover:scale-105">
+              <div class="tool-card-content">
+                <h2 class="text-2xl font-bold text-indigo-400 mb-3">
+                  修改单曲成绩
+                </h2>
+                <p class="text-gray-300">
+                  修改 RinNet 存档中的单曲成绩，支持修改判定数、通关状态等信息。
+                </p>
+              </div>
+            </a>
+          </div>
+        </div>
+        <div id="page-rin-to-lx" class="page-content space-y-8">
+          <div class="tool-card">
+            <div class="tool-card-content">
+              <h1 class="text-3xl font-bold text-white mb-6">
+                RinNet JSON 转换为 LxNet CSV
+              </h1>
+              <p class="text-gray-400 mb-6">
+                上传你的 RinNet JSON 档案 (通常包含 `userPlaylogList`
+                字段)，系统将自动转换为 LxNet 格式的 CSV 文件并提供下载。
+              </p>
+              <div class="mb-6 text-sm text-gray-400 space-y-2">
+                <div>
+                  <b>LxNet 上传成绩页面：</b>
+                  <a
+                    href="https://maimai.lxns.net/user/scores?tab=backup"
+                    target="_blank"
+                    class="text-indigo-400 underline"
+                    >https://maimai.lxns.net/user/scores?tab=backup</a
+                  >
+                  <span class="ml-1">（用于上传转换后的 CSV 文件）</span>
+                </div>
+                <div>
+                  <b>RinNet 导出存档页面：</b>
+                  <a
+                    href="https://portal.naominet.live/chuni/v2/setting"
+                    target="_blank"
+                    class="text-indigo-400 underline"
+                    >https://portal.naominet.live/chuni/v2/setting</a
+                  >
+                  <span class="ml-1"
+                    >（网页下方有“导出玩家存档”按钮，导出 JSON 文件）</span
+                  >
+                </div>
+              </div>
+              <div id="rin-alert-container"></div>
+              <div id="rin-drop-zone" class="file-input-wrapper">
+                <input
+                  type="file"
+                  id="rin-json-file"
+                  accept=".json"
+                  class="hidden"
+                />
+                <label for="rin-json-file" class="file-input-label">
+                  <span id="rin-file-name">点击选择或拖拽 JSON 文件到此处</span>
+                </label>
+              </div>
+              <div class="mt-8 text-center">
+                <button
+                  id="convert-json-btn"
+                  class="btn btn-lg w-full md:w-auto"
+                  disabled
+                >
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    class="inline-block h-5 w-5 mr-2"
+                    viewBox="0 0 20 20"
+                    fill="currentColor"
+                  >
+                    <path d="M10 12a2 2 0 100-4 2 2 0 000 4z" />
+                    <path
+                      fill-rule="evenodd"
+                      d="M.458 10C1.732 5.943 5.522 3 10 3s8.268 2.943 9.542 7c-1.274 4.057-5.022 7-9.542 7S1.732 14.057.458 10zM14 10a4 4 0 11-8 0 4 4 0 018 0z"
+                      clip-rule="evenodd"
+                    />
+                  </svg>
+                  转换并下载 CSV
+                </button>
+              </div>
+            </div>
+          </div>
+          <div class="tool-card">
+            <div class="tool-card-content">
+              <h2 class="text-2xl font-bold text-white mb-4">相关工具</h2>
+              <p class="text-gray-400 mb-6">
+                转换完成后，你可能需要将新数据与你原有的 CSV 档案合并。
+              </p>
+              <a href="#merge-csv" class="btn btn-secondary">
+                前往 CSV 合并工具
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  class="inline-block h-5 w-5 ml-2"
+                  viewBox="0 0 20 20"
+                  fill="currentColor"
+                >
+                  <path
+                    fill-rule="evenodd"
+                    d="M10.293 3.293a1 1 0 011.414 0l6 6a1 1 0 010 1.414l-6 6a1 1 0 01-1.414-1.414L14.586 11H3a1 1 0 110-2h11.586l-4.293-4.293a1 1 0 010-1.414z"
+                    clip-rule="evenodd"
+                  />
+                </svg>
+              </a>
+            </div>
+          </div>
+        </div>
+        <div id="page-merge-csv" class="page-content space-y-8">
+          <div class="tool-card">
+            <div class="tool-card-content">
+              <h1 class="text-3xl font-bold text-white mb-6">CSV 文件合并</h1>
+              <p class="text-gray-400 mb-6">
+                上传两个 CSV
+                文件。系统将使用第一个文件的表头，并将第二个文件的数据追加到第一个文件后。<b
+                  >请确保两个文件的表头（列）完全一致。</b
+                >
+              </p>
+              <div id="merge-alert-container"></div>
+              <div class="grid md:grid-cols-2 gap-6">
+                <div id="csv1-drop-zone" class="file-input-wrapper">
+                  <input
+                    type="file"
+                    id="csv-file-1"
+                    accept=".csv"
+                    class="hidden"
+                  />
+                  <label for="csv-file-1" class="file-input-label">
+                    <span class="font-bold text-white">文件 1 (基础文件)</span
+                    ><br />
+                    <span id="csv1-file-name">点击选择或拖拽文件</span>
+                  </label>
+                </div>
+                <div id="csv2-drop-zone" class="file-input-wrapper">
+                  <input
+                    type="file"
+                    id="csv-file-2"
+                    accept=".csv"
+                    class="hidden"
+                  />
+                  <label for="csv-file-2" class="file-input-label">
+                    <span class="font-bold text-white">文件 2 (追加文件)</span
+                    ><br />
+                    <span id="csv2-file-name">点击选择或拖拽文件</span>
+                  </label>
+                </div>
+              </div>
+              <div class="mt-8 text-center">
+                <button
+                  id="merge-csv-btn"
+                  class="btn btn-lg w-full md:w-auto"
+                  disabled
+                >
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    class="inline-block h-5 w-5 mr-2"
+                    viewBox="0 0 20 20"
+                    fill="currentColor"
+                  >
+                    <path
+                      d="M5 3a2 2 0 00-2 2v2a2 2 0 002 2h2a2 2 0 002-2V5a2 2 0 00-2-2H5zM5 11a2 2 0 00-2 2v2a2 2 0 002 2h2a2 2 0 002-2v-2a2 2 0 00-2-2H5zM11 5a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V5zM11 11a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z"
+                    />
+                  </svg>
+                  合并并下载
+                </button>
+              </div>
+            </div>
+          </div>
+          <div class="tool-card">
+            <div class="tool-card-content">
+              <h2 class="text-2xl font-bold text-white mb-4">相关工具</h2>
+              <p class="text-gray-400 mb-6">
+                在合并之前，你可能需要先将 RinNet 的 JSON 档案转换为 CSV 格式。
+              </p>
+              <a href="#rin-to-lx" class="btn btn-secondary">
+                前往 RinNet 转换工具
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  class="inline-block h-5 w-5 ml-2"
+                  viewBox="0 0 20 20"
+                  fill="currentColor"
+                >
+                  <path
+                    fill-rule="evenodd"
+                    d="M10.293 3.293a1 1 0 011.414 0l6 6a1 1 0 010 1.414l-6 6a1 1 0 01-1.414-1.414L14.586 11H3a1 1 0 110-2h11.586l-4.293-4.293a1 1 0 010-1.414z"
+                    clip-rule="evenodd"
+                  />
+                </svg>
+              </a>
+            </div>
+          </div>
+        </div>
+        <div id="page-edit-score" class="page-content space-y-8">
+          <div class="tool-card">
+            <div class="tool-card-content">
+              <h1 class="text-3xl font-bold text-white mb-6">修改单曲成绩</h1>
+              <p class="text-gray-400 mb-2">
+                上传你的 RinNet JSON 档案，选择要修改的歌曲和成绩记录。
+              </p>
+              <p class="text-gray-400 mb-6">
+                <span class="text-yellow-400">注意：</span>
+                方便起见只显示已通关（Clear）的成绩记录
+              </p>
+              <div id="edit-alert-container"></div>
+              <div id="edit-drop-zone" class="file-input-wrapper mb-6">
+                <input
+                  type="file"
+                  id="edit-json-file"
+                  accept=".json"
+                  class="hidden"
+                />
+                <label for="edit-json-file" class="file-input-label">
+                  <span id="edit-file-name"
+                    >点击选择或拖拽 JSON 文件到此处</span
+                  >
+                </label>
+              </div>
+
+              <div id="edit-form" class="hidden space-y-6">
+                <div>
+                  <label class="block text-sm font-medium text-gray-300 mb-2"
+                    >歌曲 ID</label
+                  >
+                  <input
+                    type="number"
+                    id="song-id"
+                    class="w-full px-4 py-2 bg-gray-700 border border-gray-600 rounded-lg text-white focus:outline-none focus:border-indigo-500"
+                    placeholder="输入歌曲 ID"
+                  />
+                </div>
+
+                <div id="record-select" class="hidden">
+                  <label class="block text-sm font-medium text-gray-300 mb-2"
+                    >选择记录</label
+                  >
+                  <select
+                    id="record-list"
+                    class="w-full px-4 py-2 bg-gray-700 border border-gray-600 rounded-lg text-white focus:outline-none focus:border-indigo-500"
+                  ></select>
+                </div>
+
+                <div id="edit-details" class="hidden">
+                  <div class="grid grid-cols-2 gap-6">
+                    <div class="space-y-4">
+                      <h3 class="text-lg font-semibold text-white">原始成绩</h3>
+                      <div id="original-score" class="text-gray-300"></div>
+                    </div>
+                    <div class="space-y-4">
+                      <h3 class="text-lg font-semibold text-white">
+                        修改后成绩
+                      </h3>
+                      <div class="space-y-3">
+                        <div>
+                          <label
+                            class="block text-sm font-medium text-gray-300 mb-1"
+                            >CRITICAL</label
+                          >
+                          <input
+                            type="number"
+                            id="edit-critical"
+                            class="score-input"
+                            disabled
+                          />
+                        </div>
+                        <div class="mb-3">
+                          <label class="flex items-center">
+                            <input
+                              type="checkbox"
+                              id="edit-auto-maintain"
+                              class="form-checkbox text-indigo-500"
+                              checked
+                            />
+                            <span class="ml-2 text-sm text-gray-300"
+                              >启用：自动维持 note 总数</span
+                            >
+                          </label>
+                        </div>
+                        <div>
+                          <label
+                            class="block text-sm font-medium text-gray-300 mb-1"
+                            >JUSTICE</label
+                          >
+                          <input
+                            type="number"
+                            id="edit-justice"
+                            class="score-input"
+                          />
+                        </div>
+                        <div>
+                          <label
+                            class="block text-sm font-medium text-gray-300 mb-1"
+                            >ATTACK</label
+                          >
+                          <input
+                            type="number"
+                            id="edit-attack"
+                            class="score-input"
+                          />
+                        </div>
+                        <div>
+                          <label
+                            class="block text-sm font-medium text-gray-300 mb-1"
+                            >MISS</label
+                          >
+                          <input
+                            type="number"
+                            id="edit-guilty"
+                            class="score-input"
+                          />
+                        </div>
+                        <div class="pt-2">
+                          <p class="text-sm text-gray-400">
+                            总分：<span id="calculated-score">0</span>
+                          </p>
+                          <p class="text-sm text-gray-400">
+                            Rank：<span id="calculated-rank">-</span>
+                          </p>
+                          <p class="text-sm text-gray-400 mt-2">
+                            状态：<span id="calculated-status">-</span>
+                          </p>
+                        </div>
+                        <div>
+                          <label
+                            class="block text-sm font-medium text-gray-300 mb-1"
+                            >Full Chain</label
+                          >
+                          <select id="edit-fullChainKind" class="score-input">
+                            <option value="0">无</option>
+                            <option value="1">Full Chain</option>
+                            <option value="2">Full Chain x2</option>
+                            <option value="3">Full Chain x3</option>
+                            <option value="4">Full Chain x4</option>
+                          </select>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <div class="mt-8 text-center">
+                <button
+                  id="download-modified-btn"
+                  class="btn btn-lg w-full md:w-auto"
+                  disabled
+                >
+                  下载修改后的存档
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </main>
+      <footer class="text-center p-6 text-gray-500 text-sm">
+        <p>一个纯前端工具。所有数据均在本地处理，不会上传到服务器。</p>
+        <p>&copy; 2025 @Choimoe. All rights reserved.</p>
+        <p>鲁ICP备2025190412号-1</p>
+      </footer>
+    </div>
+    <script type="module" src="./assets/js/app.js"></script>
+  </body>
+</html>
