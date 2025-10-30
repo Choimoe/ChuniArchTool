@@ -231,6 +231,16 @@
                 上传你的 RinNet JSON 档案，系统将自动转换为落雪格式的 CSV
                 成绩文件并提供下载。
               </p>
+              <!-- 落雪上传前备份提醒 -->
+              <div class="alert alert-error">
+                <p class="mb-1 font-semibold text-red-200">重要提示</p>
+                <p class="mb-2">
+                  落雪的上传成绩操作会清除你账号内现有的所有成绩。请务必在上传前先导出并备份原始数据，同时不要删除任何现有存档，避免造成无法恢复的损失。
+                </p>
+                <p class="text-sm text-gray-300">
+                  建议：先下载原数据 → 使用本工具转换 → 合并/上传到落雪。
+                </p>
+              </div>
               <div class="mb-6 text-sm text-gray-400 space-y-2">
                 <div>
                   <b>LxNet 上传成绩页面：</b>
@@ -576,7 +586,16 @@
       </main>
       <footer class="text-center p-6 text-gray-500 text-sm">
         <p>一个纯前端工具。所有数据均在本地处理，不会上传到服务器。</p>
-        <p>&copy; 2025 @Choimoe. All rights reserved.</p>
+        <p>
+          &copy; 2025
+          <a
+            href="https://github.com/Choimoe"
+            target="_blank"
+            rel="noopener noreferrer"
+            class="text-indigo-400 underline"
+            >@Choimoe</a
+          >. All rights reserved.
+        </p>
         <p>鲁ICP备2025190412号-1</p>
       </footer>
     </div>
