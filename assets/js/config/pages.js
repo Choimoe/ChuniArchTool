@@ -6,12 +6,12 @@ export const pages = [
   },
   {
     id: "rin-to-lx",
-    title: "RinNet -> 落雪",
+    title: "Rin服转落雪",
     showInNav: true,
   },
   {
     id: "merge-csv",
-    title: "CSV 合并",
+    title: "落雪成绩合并",
     showInNav: true,
   },
   {

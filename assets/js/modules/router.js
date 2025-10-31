@@ -1,8 +1,8 @@
 import { loadPage } from "./page-loader.js";
 import { updateActiveNav } from "./nav-builder.js";
 
-function handlePageLoad(pageId) {
-  const success = loadPage(pageId);
+async function handlePageLoad(pageId) {
+  const success = await loadPage(pageId);
 
   if (success) {
     updateActiveNav(pageId);
@@ -10,8 +10,7 @@ function handlePageLoad(pageId) {
       new CustomEvent("pageChanged", { detail: { pageId } })
     );
   } else {
-    // Fallback to home page if the pageId is invalid
-    loadPage("home");
+    await loadPage("home");
     updateActiveNav("home");
     window.dispatchEvent(
       new CustomEvent("pageChanged", { detail: { pageId: "home" } })
@@ -26,7 +25,6 @@ export function initRouter() {
     handlePageLoad(pageId);
   });
 
-  // Initial page load
   const initialHash = window.location.hash || "#home";
   const initialPageId = initialHash.substring(1);
   handlePageLoad(initialPageId);

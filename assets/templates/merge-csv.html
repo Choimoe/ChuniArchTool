@@ -1,0 +1,82 @@
+<div class="tool-card">
+  <div class="tool-card-content">
+    <h1 class="text-3xl font-bold text-white mb-6">CSV 文件合并</h1>
+    <p class="text-gray-400 mb-6">
+      上传两个 CSV
+      文件。系统将使用第一个文件的表头，并将第二个文件的数据追加到第一个文件后。<b
+        >请确保两个文件的表头（列）完全一致。</b
+      >
+    </p>
+    <div id="merge-alert-container"></div>
+    <div class="grid md:grid-cols-2 gap-6">
+      <div id="csv1-drop-zone" class="file-input-wrapper">
+        <input
+          type="file"
+          id="csv-file-1"
+          accept=".csv"
+          class="hidden"
+        />
+        <label for="csv-file-1" class="file-input-label">
+          <span class="font-bold text-white">文件 1 (基础文件)</span
+          ><br />
+          <span id="csv1-file-name">点击选择或拖拽文件</span>
+        </label>
+      </div>
+      <div id="csv2-drop-zone" class="file-input-wrapper">
+        <input
+          type="file"
+          id="csv-file-2"
+          accept=".csv"
+          class="hidden"
+        />
+        <label for="csv-file-2" class="file-input-label">
+          <span class="font-bold text-white">文件 2 (追加文件)</span
+          ><br />
+          <span id="csv2-file-name">点击选择或拖拽文件</span>
+        </label>
+      </div>
+    </div>
+    <div class="mt-8 text-center">
+      <button
+        id="merge-csv-btn"
+        class="btn btn-lg w-full md:w-auto"
+        disabled
+      >
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          class="inline-block h-5 w-5 mr-2"
+          viewBox="0 0 20 20"
+          fill="currentColor"
+        >
+          <path
+            d="M5 3a2 2 0 00-2 2v2a2 2 0 002 2h2a2 2 0 002-2V5a2 2 0 00-2-2H5zM5 11a2 2 0 00-2 2v2a2 2 0 002 2h2a2 2 0 002-2v-2a2 2 0 00-2-2H5zM11 5a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V5zM11 11a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z"
+          />
+        </svg>
+        合并并下载
+      </button>
+    </div>
+  </div>
+</div>
+<div class="tool-card">
+  <div class="tool-card-content">
+    <h2 class="text-2xl font-bold text-white mb-4">相关工具</h2>
+    <p class="text-gray-400 mb-6">
+      在合并之前，你可能需要先将 RinNet 的 JSON 档案转换为 CSV 格式。
+    </p>
+    <a href="#rin-to-lx" class="btn btn-secondary">
+      前往 RinNet 转换工具
+      <svg
+        xmlns="http://www.w3.org/2000/svg"
+        class="inline-block h-5 w-5 ml-2"
+        viewBox="0 0 20 20"
+        fill="currentColor"
+      >
+        <path
+          fill-rule="evenodd"
+          d="M10.293 3.293a1 1 0 011.414 0l6 6a1 1 0 010 1.414l-6 6a1 1 0 01-1.414-1.414L14.586 11H3a1 1 0 110-2h11.586l-4.293-4.293a1 1 0 010-1.414z"
+          clip-rule="evenodd"
+        />
+      </svg>
+    </a>
+  </div>
+</div>
