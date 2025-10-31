@@ -11,6 +11,10 @@ export function initScoreEditor(jsonData) {
   let selectedOriginalTotal = 0;
   const autoMaintainCheckbox = document.getElementById("edit-auto-maintain");
 
+  songIdInput.addEventListener("wheel", (e) => {
+    e.preventDefault();
+  });
+
   songIdInput.addEventListener("change", () => {
     const songId = parseInt(songIdInput.value);
     const records = jsonData.userPlaylogList.filter(
@@ -25,11 +29,13 @@ export function initScoreEditor(jsonData) {
     }
 
     recordList.innerHTML = "";
+    const levelNames = ["Basic", "Advanced", "Expert", "Master", "Ultima"];
     records.forEach((record, index) => {
       const option = document.createElement("option");
       option.value = record.userPlayDate;
       const date = record.userPlayDate.replace("T", " ");
-      option.textContent = `${date} - 分数: ${record.score} (${
+      const levelName = levelNames[record.level] || `Level ${record.level}`;
+      option.textContent = `${date} - ${levelName} - 分数: ${record.score} (${
         record.isAllJustice ? "AJ" : record.isFullCombo ? "FC" : "Clear"
       })`;
       recordList.appendChild(option);
