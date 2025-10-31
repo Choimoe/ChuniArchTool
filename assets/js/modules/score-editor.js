@@ -231,7 +231,7 @@ export function initScoreEditor(jsonData) {
 
     const hasNoMiss = modifiedRecord.judgeGuilty === 0;
     const hasNoAttack = modifiedRecord.judgeAttack === 0;
-    
+
     modifiedRecord.isClear = true;
     modifiedRecord.isFullCombo = hasNoMiss;
     modifiedRecord.isAllJustice = hasNoMiss && hasNoAttack;
@@ -245,14 +245,15 @@ export function initScoreEditor(jsonData) {
       modifiedRecord.judgeJustice +
       modifiedRecord.judgeAttack +
       modifiedRecord.judgeGuilty;
-    const criticalScore = Math.floor(1010000 / totalNotes);
-    const justiceScore = Math.floor(criticalScore * (100 / 101));
-    const attackScore = Math.floor(criticalScore * (50 / 101));
+    const criticalScore = 1010000 / totalNotes;
+    const justiceScore = criticalScore * (100 / 101);
+    const attackScore = criticalScore * (50 / 101);
 
-    modifiedRecord.score =
+    modifiedRecord.score = Math.floor(
       modifiedRecord.judgeCritical * criticalScore +
-      modifiedRecord.judgeJustice * justiceScore +
-      modifiedRecord.judgeAttack * attackScore;
+        modifiedRecord.judgeJustice * justiceScore +
+        modifiedRecord.judgeAttack * attackScore
+    );
 
     const recordIndex = jsonData.userPlaylogList.findIndex(
       (log) => log.userPlayDate === selectedRecord.userPlayDate
@@ -263,15 +264,17 @@ export function initScoreEditor(jsonData) {
 
     if (jsonData.userMusicDetailList) {
       const musicDetailIndex = jsonData.userMusicDetailList.findIndex(
-        (detail) => detail.musicId === modifiedRecord.musicId && detail.level === modifiedRecord.level
+        (detail) =>
+          detail.musicId === modifiedRecord.musicId &&
+          detail.level === modifiedRecord.level
       );
-      
+
       if (musicDetailIndex !== -1) {
         const currentDetail = jsonData.userMusicDetailList[musicDetailIndex];
-        
+
         if (modifiedRecord.score > currentDetail.scoreMax) {
           currentDetail.scoreMax = modifiedRecord.score;
-          
+
           if (modifiedRecord.isAllJustice) {
             currentDetail.isAllJustice = true;
             currentDetail.isFullCombo = true;
@@ -288,20 +291,33 @@ export function initScoreEditor(jsonData) {
               currentDetail.missCount = modifiedRecord.judgeGuilty;
             }
           }
-          
-          if (modifiedRecord.score >= 1009000) currentDetail.scoreRank = 13; // SSSP
-          else if (modifiedRecord.score >= 1007500) currentDetail.scoreRank = 12; // SSS
-          else if (modifiedRecord.score >= 1005000) currentDetail.scoreRank = 11; // SSP
-          else if (modifiedRecord.score >= 1000000) currentDetail.scoreRank = 10; // SS
-          else if (modifiedRecord.score >= 990000) currentDetail.scoreRank = 9; // SP
-          else if (modifiedRecord.score >= 975000) currentDetail.scoreRank = 8; // S
-          else if (modifiedRecord.score >= 950000) currentDetail.scoreRank = 7; // AAA
-          else if (modifiedRecord.score >= 925000) currentDetail.scoreRank = 6; // AA
-          else if (modifiedRecord.score >= 900000) currentDetail.scoreRank = 5; // A
-          else if (modifiedRecord.score >= 800000) currentDetail.scoreRank = 4; // BBB
-          else if (modifiedRecord.score >= 700000) currentDetail.scoreRank = 3; // BB
-          else if (modifiedRecord.score >= 600000) currentDetail.scoreRank = 2; // B
-          else if (modifiedRecord.score >= 500000) currentDetail.scoreRank = 1; // C
+
+          if (modifiedRecord.score >= 1009000)
+            currentDetail.scoreRank = 13; // SSSP
+          else if (modifiedRecord.score >= 1007500)
+            currentDetail.scoreRank = 12; // SSS
+          else if (modifiedRecord.score >= 1005000)
+            currentDetail.scoreRank = 11; // SSP
+          else if (modifiedRecord.score >= 1000000)
+            currentDetail.scoreRank = 10; // SS
+          else if (modifiedRecord.score >= 990000)
+            currentDetail.scoreRank = 9; // SP
+          else if (modifiedRecord.score >= 975000)
+            currentDetail.scoreRank = 8; // S
+          else if (modifiedRecord.score >= 950000)
+            currentDetail.scoreRank = 7; // AAA
+          else if (modifiedRecord.score >= 925000)
+            currentDetail.scoreRank = 6; // AA
+          else if (modifiedRecord.score >= 900000)
+            currentDetail.scoreRank = 5; // A
+          else if (modifiedRecord.score >= 800000)
+            currentDetail.scoreRank = 4; // BBB
+          else if (modifiedRecord.score >= 700000)
+            currentDetail.scoreRank = 3; // BB
+          else if (modifiedRecord.score >= 600000)
+            currentDetail.scoreRank = 2; // B
+          else if (modifiedRecord.score >= 500000)
+            currentDetail.scoreRank = 1; // C
           else currentDetail.scoreRank = 0; // D
         }
       }
