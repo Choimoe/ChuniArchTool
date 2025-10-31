@@ -1,33 +1,33 @@
-export function updatePage() {
-  const pageContent = document.getElementById("page-content");
-  const pages = pageContent.querySelectorAll(".page-content");
-  const navLinks = document.querySelectorAll(".nav-link");
-  const hash = window.location.hash || "#home";
-  let targetPageId = "page-" + hash.substring(1);
+import { loadPage } from "./page-loader.js";
+import { updateActiveNav } from "./nav-builder.js";
 
-  pages.forEach((page) => {
-    page.style.display = "none";
-  });
+function handlePageLoad(pageId) {
+  const success = loadPage(pageId);
 
-  navLinks.forEach((link) => {
-    if (link.getAttribute("href") === hash) {
-      link.classList.add("active");
-    } else {
-      link.classList.remove("active");
-    }
-  });
-
-  const targetPage = document.getElementById(targetPageId);
-  if (targetPage) {
-    targetPage.style.display = "block";
+  if (success) {
+    updateActiveNav(pageId);
+    window.dispatchEvent(
+      new CustomEvent("pageChanged", { detail: { pageId } })
+    );
   } else {
-    document.getElementById("page-home").style.display = "block";
-    navLinks.forEach((link) => link.classList.remove("active"));
-    document.querySelector('.nav-link[href="#home"]').classList.add("active");
+    // Fallback to home page if the pageId is invalid
+    loadPage("home");
+    updateActiveNav("home");
+    window.dispatchEvent(
+      new CustomEvent("pageChanged", { detail: { pageId: "home" } })
+    );
   }
 }
 
 export function initRouter() {
-  window.addEventListener("hashchange", updatePage);
-  updatePage();
+  window.addEventListener("hashchange", () => {
+    const hash = window.location.hash || "#home";
+    const pageId = hash.substring(1);
+    handlePageLoad(pageId);
+  });
+
+  // Initial page load
+  const initialHash = window.location.hash || "#home";
+  const initialPageId = initialHash.substring(1);
+  handlePageLoad(initialPageId);
 }
