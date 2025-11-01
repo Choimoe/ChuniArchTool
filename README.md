@@ -1,3 +1,5 @@
+[English README · README-en.md](README-en.md)
+
 # ChuniArchTools · 中二节奏档案工具
 
 一个简洁、纯前端的中二节奏（CHUNITHM）档案处理小工具集合。无需登录、无需服务器，所有数据都在你的浏览器本地完成转换与编辑。
