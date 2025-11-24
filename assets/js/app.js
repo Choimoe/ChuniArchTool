@@ -13,7 +13,22 @@ import { parseCSV } from "./modules/csv-parser.js";
 import { initRouter } from "./modules/router.js";
 import { initScoreEditor } from "./modules/score-editor.js";
 import { initOngekiScoreEditor } from "./modules/ongeki-score-editor.js";
+import { initOngekiUserEditor } from "./modules/ongeki-user-editor.js";
 import { buildNavigation, buildFooter } from "./modules/nav-builder.js";
+
+function loadPageTemplate(pageId) {
+  const pageContent = document.getElementById("page-content");
+  let template = "home";
+  if (pageId === "chuni") template = "chuni";
+  else if (pageId === "ongeki") template = "ongeki";
+  else if (pageId === "home") template = "home";
+  fetch(`./assets/templates/${template}.html`)
+    .then((res) => res.text())
+    .then((html) => {
+      pageContent.innerHTML = html;
+      initPageFeatures(pageId);
+    });
+}
 
 let selectedRinFile = null;
 let selectedCsvFile1 = null;
@@ -202,6 +217,8 @@ function initPageFeatures(pageId) {
     initScoreEditorPage();
   } else if (pageId === "edit-ongeki") {
     initOngekiScoreEditorPage();
+  } else if (pageId === "edit-ongeki-user") {
+    initOngekiUserEditor();
   }
 }
 
@@ -209,9 +226,11 @@ document.addEventListener("DOMContentLoaded", () => {
   buildNavigation();
   buildFooter();
   initRouter();
-
   window.addEventListener("pageChanged", (e) => {
-    initPageFeatures(e.detail.pageId);
+    const pageId = e.detail?.pageId;
+    if (pageId) {
+      initPageFeatures(pageId);
+    }
   });
 });
 

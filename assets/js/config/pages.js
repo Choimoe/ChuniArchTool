@@ -5,33 +5,23 @@ export const pages = [
     showInNav: true,
   },
   {
-    id: "rin-to-lx",
-    title: "Rin服转落雪",
+    id: "chuni",
+    title: "中二节奏",
     showInNav: true,
   },
   {
-    id: "merge-csv",
-    title: "落雪成绩合并",
-    showInNav: true,
-  },
-  {
-    id: "edit-score",
-    title: "修改成绩",
-    showInNav: true,
-  },
-  {
-    id: "edit-ongeki",
-    title: "修改音击成绩",
+    id: "ongeki",
+    title: "音击",
     showInNav: true,
   },
 ];
 
 export const siteConfig = {
-  siteName: "ChuniArchTools",
-  siteTitle: "中二节奏 档案工具",
-  siteDescription: "纯前端工具，安全、快速、便捷。",
+  siteName: "ArcadeArchTools",
+  siteTitle: "街机成绩工具",
+  siteDescription: "街机音游档案修改工具，纯前端、安全、快速、便捷。",
   logo: {
-    prefix: "Chuni",
+    prefix: "Arcade",
     suffix: "ArchTools",
   },
   footer: {
