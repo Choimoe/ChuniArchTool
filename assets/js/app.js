@@ -12,6 +12,7 @@ import {
 import { parseCSV } from "./modules/csv-parser.js";
 import { initRouter } from "./modules/router.js";
 import { initScoreEditor } from "./modules/score-editor.js";
+import { initOngekiScoreEditor } from "./modules/ongeki-score-editor.js";
 import { buildNavigation, buildFooter } from "./modules/nav-builder.js";
 
 let selectedRinFile = null;
@@ -199,6 +200,8 @@ function initPageFeatures(pageId) {
     initCsvMerger();
   } else if (pageId === "edit-score") {
     initScoreEditorPage();
+  } else if (pageId === "edit-ongeki") {
+    initOngekiScoreEditorPage();
   }
 }
 
@@ -211,3 +214,24 @@ document.addEventListener("DOMContentLoaded", () => {
     initPageFeatures(e.detail.pageId);
   });
 });
+
+function initOngekiScoreEditorPage() {
+  const alertContainer = document.getElementById('ongeki-alert-container')
+  const form = document.getElementById('ongeki-form')
+  if (!alertContainer || !form) return
+  setupFileDropZone('ongeki-drop-zone','ongeki-json-file','ongeki-file-name', async file => {
+    clearAlert(alertContainer)
+    form.classList.add('hidden')
+    try {
+      const text = await readFileAsText(file)
+      const jsonData = JSON.parse(text)
+      if (!jsonData || !Array.isArray(jsonData.userPlaylogList)) {
+        throw new Error('无效的 JSON：未找到 userPlaylogList')
+      }
+      initOngekiScoreEditor(jsonData)
+      showAlert(alertContainer,'档案加载成功','success')
+    } catch (err) {
+      showAlert(alertContainer,`加载失败：${err.message}`,'error')
+    }
+  })
+}

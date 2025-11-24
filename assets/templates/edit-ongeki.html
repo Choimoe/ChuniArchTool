@@ -1,0 +1,100 @@
+<div class="tool-card">
+  <div class="tool-card-content">
+    <h1 class="text-3xl font-bold text-white mb-6">修改音击单曲成绩</h1>
+    <p class="text-gray-400 mb-2">上传你的音击本地 JSON 档案，选择要修改的曲目与难度记录。</p>
+    <p class="text-gray-400 mb-6"><span class="text-yellow-400">注意：</span>仅显示已游玩记录。请先备份原始文件。</p>
+    <div class="alert alert-error mb-4">
+      <p class="mb-2">音击存档修改存在风险，务必使用副本操作，上传覆盖前再次校验。</p>
+    </div>
+    <div id="ongeki-alert-container"></div>
+    <div id="ongeki-drop-zone" class="file-input-wrapper mb-6">
+      <input type="file" id="ongeki-json-file" accept=".json" class="hidden" />
+      <label for="ongeki-json-file" class="file-input-label">
+        <span id="ongeki-file-name">点击选择或拖拽 JSON 文件到此处</span>
+      </label>
+    </div>
+    <div id="ongeki-form" class="hidden space-y-6">
+      <div>
+        <label class="block text-sm font-medium text-gray-300 mb-2">歌曲 ID</label>
+        <input type="number" id="ongeki-song-id" class="w-full px-4 py-2 bg-gray-700 border border-gray-600 rounded-lg text-white focus:outline-none focus:border-indigo-500" placeholder="输入歌曲 ID" />
+      </div>
+      <div id="ongeki-record-select" class="hidden">
+        <label class="block text-sm font-medium text-gray-300 mb-2">选择记录</label>
+        <select id="ongeki-record-list" class="w-full px-4 py-2 bg-gray-700 border border-gray-600 rounded-lg text-white focus:outline-none focus:border-indigo-500"></select>
+      </div>
+      <div id="ongeki-edit-details" class="hidden">
+        <div class="space-y-6">
+          <div class="grid md:grid-cols-2 gap-6">
+            <div class="space-y-4">
+              <h3 class="text-lg font-semibold text-white">原始成绩</h3>
+              <div id="ongeki-original-score" class="text-gray-300 text-sm leading-relaxed"></div>
+            </div>
+            <div class="space-y-4">
+              <div class="flex items-center justify-between">
+                <h3 class="text-lg font-semibold text-white">编辑判定与数值</h3>
+                <button id="ongeki-toggle-advanced-btn" type="button" class="px-3 py-1 text-xs rounded bg-gray-600 hover:bg-red-600 transition-colors" title="开启后可修改 CRITICAL BREAK 与 Bell 总数，可能破坏推断的总音符约束">开启高级编辑</button>
+              </div>
+              <div class="grid grid-cols-2 gap-4">
+                <div>
+                  <label class="block text-xs font-medium text-gray-300 mb-1">PLATINUM CRITICAL BREAK</label>
+                  <input type="number" id="ongeki-edit-platinum-critical" class="score-input" min="0" placeholder="数量" title="Platinum Critical Break 数量" />
+                </div>
+                <div>
+                  <label class="block text-xs font-medium text-gray-300 mb-1">CRITICAL BREAK</label>
+                  <input type="number" id="ongeki-edit-critical-break" class="score-input" min="0" placeholder="数量" title="Critical Break" />
+                </div>
+                <div>
+                  <label class="block text-xs font-medium text-gray-300 mb-1">BREAK</label>
+                  <input type="number" id="ongeki-edit-break" class="score-input" min="0" placeholder="数量" title="Break 数量" />
+                </div>
+                <div>
+                  <label class="block text-xs font-medium text-gray-300 mb-1">HIT</label>
+                  <input type="number" id="ongeki-edit-hit" class="score-input" min="0" placeholder="数量" title="Hit 数量" />
+                </div>
+                <div>
+                  <label class="block text-xs font-medium text-gray-300 mb-1">MISS</label>
+                  <input type="number" id="ongeki-edit-miss" class="score-input" min="0" placeholder="数量" title="Miss 数量" />
+                </div>
+                <div>
+                  <label class="block text-xs font-medium text-gray-300 mb-1">Bell 回收数</label>
+                  <input type="number" id="ongeki-edit-bell" class="score-input" min="0" placeholder="数量" title="已回收 Bell 数" />
+                </div>
+                <div>
+                  <label class="block text-xs font-medium text-gray-300 mb-1">Damage 次数</label>
+                  <input type="number" id="ongeki-edit-damage" class="score-input" min="0" placeholder="数量" title="Damage 次数" />
+                </div>
+                <div>
+                  <label class="block text-xs font-medium text-gray-300 mb-1">Bell 总数</label>
+                  <input type="number" id="ongeki-edit-total-bell" class="score-input bg-gray-600 cursor-not-allowed" readonly placeholder="总数" title="Bell 总数" />
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="grid md:grid-cols-3 gap-6">
+            <div class="space-y-2 text-sm">
+              <h4 class="text-white font-semibold">技术分 (Tech)</h4>
+              <p class="text-gray-400">当前：<span id="ongeki-tech-score">0</span> / 理论：<span id="ongeki-tech-max">1010000</span></p>
+              <p class="text-gray-400">Rank：<span id="ongeki-tech-rank">-</span></p>
+              <p class="text-gray-400">技术定数：<span id="ongeki-tech-const">-</span></p>
+            </div>
+            <div class="space-y-2 text-sm">
+              <h4 class="text-white font-semibold">白金分 (Platinum)</h4>
+              <p class="text-gray-400">当前：<span id="ongeki-platinum-score">0</span> / 理论：<span id="ongeki-platinum-max">0</span></p>
+              <p class="text-gray-400">白金星：<span id="ongeki-platinum-star">0</span></p>
+              <p class="text-gray-400">推断 Platinum Critical：<span id="ongeki-inferred-platinum">0</span></p>
+            </div>
+            <div class="space-y-2 text-sm">
+              <h4 class="text-white font-semibold">标记 / Rating</h4>
+              <p class="text-gray-400">标记加分：<span id="ongeki-id-const">0.000</span></p>
+              <p class="text-gray-400">Rating：<span id="ongeki-total-const">0.000</span></p>
+              <p class="text-gray-400">状态：<span id="ongeki-status-display">-</span></p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="mt-8 text-center">
+      <button id="ongeki-download-modified-btn" class="btn btn-lg w-full md:w-auto" disabled>下载修改后的存档</button>
+    </div>
+  </div>
+</div>

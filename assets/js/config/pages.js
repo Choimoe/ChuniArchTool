@@ -19,6 +19,11 @@ export const pages = [
     title: "修改成绩",
     showInNav: true,
   },
+  {
+    id: "edit-ongeki",
+    title: "修改音击成绩",
+    showInNav: true,
+  },
 ];
 
 export const siteConfig = {
