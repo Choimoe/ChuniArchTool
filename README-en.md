@@ -2,7 +2,7 @@
 
 A lightweight, fully client‑side toolkit for CHUNITHM archive handling. No login, no server. All conversions and edits happen locally in your browser.
 
-- Online demo: http://web.choimoe.com/chuni/
+- Online demo: https://web.choimoe.com/chuni/
 - Privacy friendly: no upload, no persistence, no access to your accounts.
 
 ## Features
@@ -18,7 +18,7 @@ All features run in the browser and fit an offline flow: export → convert/merg
 Use the online demo, or host the static site locally:
 
 - Option A: Online
-  - Open http://web.choimoe.com/chuni/
+  - Open https://web.choimoe.com/chuni/
 - Option B: Local
   - Pages load HTML templates asynchronously, so use a local HTTP server:
 

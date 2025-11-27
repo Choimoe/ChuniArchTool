@@ -4,7 +4,7 @@
 
 一个简洁、纯前端的中二节奏（CHUNITHM）档案处理小工具集合。无需登录、无需服务器，所有数据都在你的浏览器本地完成转换与编辑。
 
-- 在线体验: http://web.choimoe.com/chuni/
+- 在线体验: https://web.choimoe.com/chuni/
 - 隐私友好: 不上传、不持久化，不触碰你的任何账号信息。
 
 ## 功能一览
@@ -20,7 +20,7 @@
 你可以直接使用在线 DEMO，或在本地以静态站点方式打开：
 
 - 方式一：在线使用
-  - 打开 http://web.choimoe.com/chuni/
+  - 打开 https://web.choimoe.com/chuni/
 - 方式二：本地打开
   - 由于页面以异步方式加载 HTML 模板，建议通过本地 HTTP 服务访问：
 
